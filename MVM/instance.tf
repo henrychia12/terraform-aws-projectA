@@ -14,18 +14,14 @@ resource "aws_instance" "ui" {
       private_key = "${file("~/.ssh/id_rsa")}"
     }
     inline = [
-	     	"sudo apt-get install git",
-		"git clone http://github.com/HMSBennett/DockerInstall",			
-		"cd DockerInstall",
-		"./install.sh",
-		"./docCompInstall.sh",
-		"cd ..",
-		"git clone https://github.com/HMSBennett/DockerMEAN",
-		"cd DockerMEAN",
-		"cd OneVM",
-		"sudo systemctl enable docker",
-		"sudo systemctl start docker",
-		"sudo docker-compose up -d"
+	      "sudo apt-get install git",
+              "git clone http://github.com/HMSBennett/DockerInstall",			
+	      "cd DockerInstall",
+	      "./install.sh",
+              "./docCompInstall.sh",
+	      "sudo systemctl enable docker",
+              "sudo systemctl start docker",
+	      "sudo docker run -d -p 80:80 --name vmone_ui_1 hmsbennett/pool_ui:latest"
     ]
   }
 }
@@ -46,7 +42,14 @@ resource "aws_instance" "api" {
       private_key = "${file("~/.ssh/id_rsa")}"
     }
     inline = [
-	      "echo testing api"    
+	      "sudo apt-get install git",
+              "git clone http://github.com/HMSBennett/DockerInstall",
+              "cd DockerInstall",
+              "./install.sh",
+              "./docCompInstall.sh",
+              "sudo systemctl enable docker",
+              "sudo systemctl start docker",
+	      "sudo docker run -d -e MONGO_HOST=${aws_instance.db.private_ip} --name vmone_api_1 hmsbennett/pool_api:latest"
 	     ]
   }
 }
@@ -67,7 +70,14 @@ resource "aws_instance" "db" {
       private_key = "${file("~/.ssh/id_rsa")}"
     }
     inline = [
-	      "echo testing db"    
+              "sudo apt-get install git",
+              "git clone http://github.com/HMSBennett/DockerInstall",
+              "cd DockerInstall",
+              "./install.sh",
+              "./docCompInstall.sh",
+              "sudo systemctl enable docker",
+              "sudo systemctl start docker",
+	      "sudo docker run -d -p 27017:27017 --name vmone_mongo_1 mongo:latest"
 	     ]
   }
 }
